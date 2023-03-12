@@ -12,16 +12,29 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+import csv
+
+with open('data.csv','r',encoding='UTF-8') as data:
+    entrada=csv.reader(data,delimiter=' ')
+    lista=list(entrada)
+
+listadef=[]
+for linea in lista:
+    x=linea[0].split('\t')
+    listadef.append(x)
+
 
 def pregunta_01():
     """
     Retorne la suma de la segunda columna.
-
     Rta/
     214
-
     """
-    return
+    suma=0
+    for i in listadef:
+        suma=suma+int(i[1])
+
+    return suma
 
 
 def pregunta_02():
@@ -39,7 +52,16 @@ def pregunta_02():
     ]
 
     """
-    return
+    listaaux=[]
+    for i in listadef:
+        listaaux.append(i[0])
+    listap2=[]
+    listap2.append(("A",listaaux.count("A")))
+    listap2.append(("B",listaaux.count("B")))
+    listap2.append(("C",listaaux.count("C")))
+    listap2.append(("D",listaaux.count("D")))
+    listap2.append(("E",listaaux.count("E")))
+    return listap2
 
 
 def pregunta_03():
@@ -57,7 +79,16 @@ def pregunta_03():
     ]
 
     """
-    return
+    listaa = [z[0] for z in listadef[0:]]
+    listaa = sorted(list(set(listaa)))
+
+    listasum= []
+    for i in listaa:
+        w = [int(z[1]) for z in listadef[0:] if z[0] == i]
+        listasum.append(sum(w))
+
+    listasum = list(zip(listaa,listasum))
+    return listasum
 
 
 def pregunta_04():
@@ -82,7 +113,18 @@ def pregunta_04():
     ]
 
     """
-    return
+    listaa = [z[2].split("-") for z in listadef[0:]]
+    b = sorted(list(set([z[1] for z in listaa])))
+
+    cuenta = []
+
+    for i in b:
+        w = ([z for z in listaa if z[1] == i])
+        cuenta.append(len(w))
+
+    cuenta = list(zip(b,cuenta))
+
+    return cuenta
 
 
 def pregunta_05():
@@ -100,7 +142,18 @@ def pregunta_05():
     ]
 
     """
-    return
+    listaa = [z[0] for z in listadef[0:]]
+    listaa = sorted(list(set(listaa)))
+
+    maxi = []
+    mini = []
+    for i in listaa:
+        w = [int(z[1]) for z in listadef[0:] if z[0] == i]
+        maxi.append(max(w))
+        mini.append(min(w))
+
+    valor = list(zip(listaa,maxi,mini))
+    return valor
 
 
 def pregunta_06():
@@ -125,7 +178,21 @@ def pregunta_06():
     ]
 
     """
-    return
+    dicc={}
+    for row in listadef:
+        for i in row[4].split(","):
+            currentKeyValue = dicc.get(str(i[:3]),-1)
+            currentValue = int(i[4:])
+            if(currentKeyValue == -1):
+                dicc[str(i[:3])] = (currentValue,currentValue)
+            if(currentKeyValue !=-1):
+                dicc[str(i[:3])] = (min(currentKeyValue[0],currentValue),max(currentKeyValue[1],currentValue))
+
+    sort = list(sorted(dicc.items()))
+    final = []
+    for i in sort:
+        final.append((i[0],i[1][0],i[1][1]))
+    return final
 
 
 def pregunta_07():
@@ -149,7 +216,15 @@ def pregunta_07():
     ]
 
     """
-    return
+    dicc = {}
+    for i in listadef:
+        index = int(i[1])
+        current = dicc.get(index,-1)
+        if(current == -1):
+            dicc[index] = [i[0]]
+        else:
+            dicc[index].append(i[0])
+    return list(sorted(dicc.items()))
 
 
 def pregunta_08():
@@ -174,7 +249,18 @@ def pregunta_08():
     ]
 
     """
-    return
+    dicc = {}
+    for i in listadef:
+        current = dicc.get(i[1],-1)
+        if(current == -1):
+            dicc[i[1]] = [i[0]]
+        else:
+            dicc[i[1]].append(i[0])
+    sort = list(sorted(dicc.items()))
+    final = []
+    for i in sort:
+        final.append((int(i[0]),list(sorted(set(i[1])))))
+    return final
 
 
 def pregunta_09():
@@ -197,7 +283,11 @@ def pregunta_09():
     }
 
     """
-    return
+    dicc={}
+    for i in listadef:
+        for i in i[4].split(","):
+            dicc[str(i[:3])] = dicc.get(str(i[:3]),0) + 1
+    return dict(sorted(dicc.items()))
 
 
 def pregunta_10():
@@ -218,7 +308,10 @@ def pregunta_10():
 
 
     """
-    return
+    listaa = []
+    for i in listadef:
+        listaa.append((i[0],len(i[3].split(",")),len(i[4].split(","))))
+    return listaa
 
 
 def pregunta_11():
@@ -239,7 +332,11 @@ def pregunta_11():
 
 
     """
-    return
+    dicc={}
+    for row in listadef:
+        for i in row[3].split(","):
+            dicc[str(i)] = dicc.get(str(i),0) + int(row[1])
+    return dict(sorted(dicc.items()))
 
 
 def pregunta_12():
@@ -257,4 +354,8 @@ def pregunta_12():
     }
 
     """
-    return
+    dicc={}
+    for row in listadef:
+        for i in row[4].split(","):
+            dicc[row[0]] = dicc.get(row[0],0) + int(i[4:])
+    return dict(sorted(dicc.items())) 
